@@ -205,6 +205,7 @@ public interface ChannelBuffer extends Comparable<ChannelBuffer> {
 
     /**
      * Returns the number of bytes (octets) this buffer can contain.
+     * 返回buff的容量
      */
     int capacity();
 
@@ -216,6 +217,7 @@ public interface ChannelBuffer extends Comparable<ChannelBuffer> {
      * Please note that the behavior of this method is different from that of
      * NIO buffer, which sets the {@code limit} to the {@code capacity} of the
      * buffer.
+     * 将读写索引重置为起始位
      */
     void clear();
 

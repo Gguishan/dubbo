@@ -57,6 +57,8 @@ public class WrappedChannelHandler implements ChannelHandlerDelegate {
             componentKey = CONSUMER_SIDE;
         }
         DataStore dataStore = ExtensionLoader.getExtensionLoader(DataStore.class).getDefaultExtension();
+        System.err.println("org.apache.dubbo.remoting.transport.dispatcher.WrappedChannelHandler.WrappedChannelHandler dataStore => " + dataStore.getClass().getName());
+        System.err.println("org.apache.dubbo.remoting.transport.dispatcher.WrappedChannelHandler.WrappedChannelHandler componentKey => " + componentKey);
         dataStore.put(componentKey, Integer.toString(url.getPort()), executor);
     }
 

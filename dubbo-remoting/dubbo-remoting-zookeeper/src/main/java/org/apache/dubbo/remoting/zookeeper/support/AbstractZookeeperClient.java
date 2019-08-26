@@ -56,6 +56,7 @@ public abstract class AbstractZookeeperClient<TargetDataListener, TargetChildLis
 
     @Override
     public void create(String path, boolean ephemeral) {
+        System.err.println("org.apache.dubbo.remoting.zookeeper.support.AbstractZookeeperClient => " + path);
         if (!ephemeral) {
             if (checkExists(path)) {
                 return;

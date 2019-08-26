@@ -60,6 +60,7 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorZooke
 
     public CuratorZookeeperClient(URL url) {
         super(url);
+        System.err.println("CuratorZookeeperClient===========>" + url.getAbsolutePath());
         try {
             int timeout = url.getParameter(TIMEOUT_KEY, 5000);
             CuratorFrameworkFactory.Builder builder = CuratorFrameworkFactory.builder()

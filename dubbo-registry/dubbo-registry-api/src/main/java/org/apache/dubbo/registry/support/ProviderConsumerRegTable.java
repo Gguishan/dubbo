@@ -39,6 +39,7 @@ public class ProviderConsumerRegTable {
     public static <T> ProviderInvokerWrapper<T> registerProvider(Invoker<T> invoker, URL registryUrl, URL providerUrl) {
         ProviderInvokerWrapper<T> wrapperInvoker = new ProviderInvokerWrapper<>(invoker, registryUrl, providerUrl);
         String serviceUniqueName = providerUrl.getServiceKey();
+        System.err.println("org.apache.dubbo.registry.support.ProviderInvokerWrapper -> serviceUniqueName => {}" + serviceUniqueName);
         ConcurrentMap<Invoker, ProviderInvokerWrapper> invokers = providerInvokers.get(serviceUniqueName);
         if (invokers == null) {
             providerInvokers.putIfAbsent(serviceUniqueName, new ConcurrentHashMap<>());

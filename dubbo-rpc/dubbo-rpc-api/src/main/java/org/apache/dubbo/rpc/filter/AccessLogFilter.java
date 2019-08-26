@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.rpc.filter;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.common.logger.Logger;
 import org.apache.dubbo.common.logger.LoggerFactory;
@@ -114,13 +115,13 @@ public class AccessLogFilter implements Filter {
 
     private void log(String accessLog, AccessLogData accessLogData) {
         Set<AccessLogData> logSet = LOG_ENTRIES.computeIfAbsent(accessLog, k -> new ConcurrentHashSet<>());
-
         if (logSet.size() < LOG_MAX_BUFFER) {
             logSet.add(accessLogData);
         } else {
             //TODO we needs use force writing to file so that buffer gets clear and new log can be written.
             logger.warn("AccessLog buffer is full skipping buffer ");
         }
+        System.err.println("org.apache.dubbo.rpc.filter.AccessLogFilter.log => logSet: " + JSON.toJSONString(logSet));
     }
 
     private void writeLogToFile() {

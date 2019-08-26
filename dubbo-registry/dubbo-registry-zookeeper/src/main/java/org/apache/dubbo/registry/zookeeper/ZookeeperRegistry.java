@@ -16,6 +16,7 @@
  */
 package org.apache.dubbo.registry.zookeeper;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.dubbo.common.URL;
 import org.apache.dubbo.common.URLBuilder;
 import org.apache.dubbo.common.logger.Logger;
@@ -74,6 +75,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
 
     public ZookeeperRegistry(URL url, ZookeeperTransporter zookeeperTransporter) {
         super(url);
+        System.err.println("ZookeeperRegistry=>"+ JSON.toJSONString(url));
         if (url.isAnyHost()) {
             throw new IllegalStateException("registry address == null");
         }
@@ -82,6 +84,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
             group = PATH_SEPARATOR + group;
         }
         this.root = group;
+        System.err.println("root=>" + this.root);
         zkClient = zookeeperTransporter.connect(url);
         zkClient.addStateListener(state -> {
             if (state == StateListener.RECONNECTED) {
@@ -113,6 +116,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
     public void doRegister(URL url) {
         try {
             zkClient.create(toUrlPath(url), url.getParameter(DYNAMIC_KEY, true));
+            System.err.println("doRegister:toUrlPath=>" + toUrlPath(url));
         } catch (Throwable e) {
             throw new RpcException("Failed to register " + url + " to zookeeper " + getUrl() + ", cause: " + e.getMessage(), e);
         }

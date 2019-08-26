@@ -89,7 +89,7 @@ public abstract class AnnotatedBeanDefinitionRegistryUtils {
      * @revision 2.7.3 {@link #isPresentBean(BeanDefinitionRegistry, Class)}
      */
     public static void registerBeans(BeanDefinitionRegistry registry, Class<?>... annotatedClasses) {
-
+        System.err.println("enter => [registerBeans], annotatedClasses => " + annotatedClasses.getClass().getName());
         if (ObjectUtils.isEmpty(annotatedClasses)) {
             return;
         }

@@ -45,9 +45,18 @@ import static org.apache.dubbo.common.constants.CommonConstants.THREADPOOL_KEY;
  */
 public abstract class AbstractClient extends AbstractEndpoint implements Client {
 
+    /**
+     * 客户端线程名称
+     */
     protected static final String CLIENT_THREAD_POOL_NAME = "DubboClientHandler";
     private static final Logger logger = LoggerFactory.getLogger(AbstractClient.class);
+    /**
+     * 连接锁
+     */
     private final Lock connectLock = new ReentrantLock();
+    /**
+     * 发送消息时，若断开，是否重连
+     */
     private final boolean needReconnect;
     protected volatile ExecutorService executor;
 
@@ -57,6 +66,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
         needReconnect = url.getParameter(Constants.SEND_RECONNECT_KEY, false);
 
         try {
+            // 打开客户端
             doOpen();
         } catch (Throwable t) {
             close();
@@ -65,6 +75,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
                             + " connect to the server " + getRemoteAddress() + ", cause: " + t.getMessage(), t);
         }
         try {
+            // 连接服务器
             // connect.
             connect();
             if (logger.isInfoEnabled()) {
@@ -85,8 +96,11 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
                             + " connect to the server " + getRemoteAddress() + ", cause: " + t.getMessage(), t);
         }
 
+        // 从缓存中获得线程池
         executor = (ExecutorService) ExtensionLoader.getExtensionLoader(DataStore.class)
                 .getDefaultExtension().get(CONSUMER_SIDE, Integer.toString(url.getPort()));
+        System.err.println("org.apache.dubbo.remoting.transport.AbstractClient.AbstractClient executor => " + executor.getClass().getName());
+        // 清除线程池缓存
         ExtensionLoader.getExtensionLoader(DataStore.class)
                 .getDefaultExtension().remove(CONSUMER_SIDE, Integer.toString(url.getPort()));
     }
