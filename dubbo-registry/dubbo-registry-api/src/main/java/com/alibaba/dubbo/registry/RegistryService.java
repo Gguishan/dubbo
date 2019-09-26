@@ -84,7 +84,7 @@ public interface RegistryService {
 
     /**
      * Query the registered data that matches the conditions. Corresponding to the push mode of the subscription, this is the pull mode and returns only one result.
-     *
+     * 查询满足条件的已注册数据
      * @param url Query condition, is not allowed to be empty, e.g. consumer://10.20.153.10/com.alibaba.foo.BarService?version=1.0.0&application=kylin
      * @return The registered information list, which may be empty, the meaning is the same as the parameters of {@link com.alibaba.dubbo.registry.NotifyListener#notify(List<URL>)}.
      * @see com.alibaba.dubbo.registry.NotifyListener#notify(List)

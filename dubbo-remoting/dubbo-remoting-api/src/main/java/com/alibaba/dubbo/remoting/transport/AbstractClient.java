@@ -51,9 +51,11 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
     protected static final String CLIENT_THREAD_POOL_NAME = "DubboClientHandler";
     private static final Logger logger = LoggerFactory.getLogger(AbstractClient.class);
     private static final AtomicInteger CLIENT_THREAD_POOL_ID = new AtomicInteger();
+    // 重连定时器
     private static final ScheduledThreadPoolExecutor reconnectExecutorService = new ScheduledThreadPoolExecutor(2, new NamedThreadFactory("DubboClientReconnectTimer", true));
     private final Lock connectLock = new ReentrantLock();
     private final boolean send_reconnect;
+    // 重连次数
     private final AtomicInteger reconnect_count = new AtomicInteger(0);
     // Reconnection error log has been called before?
     private final AtomicBoolean reconnect_error_log_flag = new AtomicBoolean(false);
@@ -143,6 +145,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
 
     /**
      * init reconnect thread
+     * 初始化重连线程
      */
     private synchronized void initConnectStatusCheckCommand() {
         //reconnect=false to close reconnect
@@ -177,6 +180,7 @@ public abstract class AbstractClient extends AbstractEndpoint implements Client 
         }
     }
 
+    // 销毁连接
     private synchronized void destroyConnectStatusCheckCommand() {
         try {
             if (reconnectExecutorFuture != null && !reconnectExecutorFuture.isDone()) {

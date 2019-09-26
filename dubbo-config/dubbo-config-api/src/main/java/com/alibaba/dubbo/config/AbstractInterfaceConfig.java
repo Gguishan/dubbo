@@ -134,6 +134,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
 
     @SuppressWarnings("deprecation")
     protected void checkApplication() {
+        System.err.println("=========com.alibaba.dubbo.config.AbstractInterfaceConfig.checkApplication========");
         // for backward compatibility
         if (application == null) {
             String applicationName = ConfigUtils.getProperty("dubbo.application.name");

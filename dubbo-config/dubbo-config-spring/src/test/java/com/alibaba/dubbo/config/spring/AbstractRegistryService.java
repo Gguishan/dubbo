@@ -40,18 +40,23 @@ public abstract class AbstractRegistryService implements RegistryService {
 
     // registered services
     // Map<serviceName, Map<url, queryString>>
+    // 注册服务
+    // key: 接口服务名serviceName => com.alibaba.dubbo.demo.DemoService
     private final ConcurrentMap<String, List<URL>> registered = new ConcurrentHashMap<String, List<URL>>();
 
     // subscribed services
     // Map<serviceName, queryString>
+    // 订阅服务
     private final ConcurrentMap<String, Map<String, String>> subscribed = new ConcurrentHashMap<String, Map<String, String>>();
 
     // notified services
     // Map<serviceName, Map<url, queryString>>
+    // 通知服务
     private final ConcurrentMap<String, List<URL>> notified = new ConcurrentHashMap<String, List<URL>>();
 
     // notification listeners for the subscribed services
     // Map<serviceName, List<notificationListener>>
+    // 通知监听订阅服务
     private final ConcurrentMap<String, List<NotifyListener>> notifyListeners = new ConcurrentHashMap<String, List<NotifyListener>>();
 
     @Override

@@ -51,6 +51,7 @@ public class NettyHandler extends SimpleChannelHandler {
         if (handler == null) {
             throw new IllegalArgumentException("handler == null");
         }
+        System.err.println("com.alibaba.dubbo.remoting.transport.netty.NettyHandler handler => " + handler.getClass().getName());
         this.url = url;
         this.handler = handler;
     }

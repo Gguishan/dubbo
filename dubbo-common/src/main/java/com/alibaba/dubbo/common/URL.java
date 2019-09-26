@@ -369,8 +369,10 @@ public final class URL implements Serializable {
     public List<URL> getBackupUrls() {
         List<URL> urls = new ArrayList<URL>();
         urls.add(this);
+        // 备份
         String[] backups = getParameter(Constants.BACKUP_KEY, new String[0]);
         if (backups != null && backups.length > 0) {
+            System.err.println("com.alibaba.dubbo.common.URL.getBackupUrls backup => " + Arrays.toString(backups));
             for (String backup : backups) {
                 urls.add(this.setAddress(backup));
             }
@@ -1222,6 +1224,7 @@ public final class URL implements Serializable {
         if (version != null && version.length() > 0) {
             buf.append(":").append(version);
         }
+        System.err.println("getServiceKey => " + buf.toString());
         return buf.toString();
     }
 

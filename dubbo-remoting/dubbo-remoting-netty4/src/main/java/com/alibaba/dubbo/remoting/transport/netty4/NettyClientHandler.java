@@ -43,6 +43,7 @@ public class NettyClientHandler extends ChannelDuplexHandler {
         if (handler == null) {
             throw new IllegalArgumentException("handler == null");
         }
+        System.err.println("com.alibaba.dubbo.remoting.transport.netty4.NettyClientHandler.NettyClientHandler handler => " + handler.getClass().getName());
         this.url = url;
         this.handler = handler;
     }

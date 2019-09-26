@@ -64,6 +64,7 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
     @SuppressWarnings("unchecked")
     public <T> Exporter<T> export(final Invoker<T> invoker) throws RpcException {
         final String uri = serviceKey(invoker.getUrl());
+        System.err.println("com.alibaba.dubbo.rpc.protocol.AbstractProxyProtocol.export uri => " + uri);
         Exporter<T> exporter = (Exporter<T>) exporterMap.get(uri);
         if (exporter != null) {
             return exporter;

@@ -206,6 +206,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             return;
         }
 
+        // 延时暴露
         if (delay != null && delay > 0) {
             delayExportExecutor.schedule(new Runnable() {
                 @Override
@@ -219,17 +220,20 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
 
     protected synchronized void doExport() {
+        System.err.println("=============com.alibaba.dubbo.config.ServiceConfig.doExport==================");
         if (unexported) {
             throw new IllegalStateException("Already unexported!");
         }
         if (exported) {
             return;
         }
+        // 设置暴露标记
         exported = true;
         if (interfaceName == null || interfaceName.length() == 0) {
             throw new IllegalStateException("<dubbo:service interface=\"\" /> interface not allow null!");
         }
         checkDefault();
+        // 服务提供者配置
         if (provider != null) {
             if (application == null) {
                 application = provider.getApplication();
@@ -307,8 +311,11 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 throw new IllegalStateException("The stub implementation class " + stubClass.getName() + " not implement interface " + interfaceName);
             }
         }
+        System.err.println("==========> interfaceName " + interfaceName.getClass().getName());
         checkApplication();
+        // 校验注册中心
         checkRegistry();
+        // 校验协议
         checkProtocol();
         appendProperties(this);
         checkStub(interfaceClass);
@@ -477,6 +484,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 .hasExtension(url.getProtocol())) {
             url = ExtensionLoader.getExtensionLoader(ConfiguratorFactory.class)
                     .getExtension(url.getProtocol()).getConfigurator(url).configure(url);
+            System.err.println(url + " <= url ========== url.getProtocol() " + url.getProtocol());
         }
 
         String scope = url.getParameter(Constants.SCOPE_KEY);
@@ -494,6 +502,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 }
                 if (registryURLs != null && !registryURLs.isEmpty()) {
                     for (URL registryURL : registryURLs) {
+                        System.err.println("com.alibaba.dubbo.config.ServiceConfig.doExportUrlsFor1Protocol registryURL => " + registryURL);
                         url = url.addParameterIfAbsent(Constants.DYNAMIC_KEY, registryURL.getParameter(Constants.DYNAMIC_KEY));
                         URL monitorUrl = loadMonitor(registryURL);
                         if (monitorUrl != null) {
@@ -524,6 +533,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 }
             }
         }
+        System.err.println("com.alibaba.dubbo.config.ServiceConfig.doExportUrlsFor1Protocol url => " + url);
         this.urls.add(url);
     }
 
@@ -700,6 +710,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
 
     private void checkDefault() {
+        System.err.println("=============com.alibaba.dubbo.config.ServiceConfig.checkDefault==================");
         if (provider == null) {
             provider = new ProviderConfig();
         }

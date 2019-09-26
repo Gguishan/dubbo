@@ -44,8 +44,10 @@ public class ZookeeperRegistry extends FailbackRegistry {
 
     private final static Logger logger = LoggerFactory.getLogger(ZookeeperRegistry.class);
 
+    // zookeeper默认端口
     private final static int DEFAULT_ZOOKEEPER_PORT = 2181;
 
+    // zookeeper默认根目录
     private final static String DEFAULT_ROOT = "dubbo";
 
     private final String root;
@@ -54,6 +56,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
 
     private final ConcurrentMap<URL, ConcurrentMap<NotifyListener, ChildListener>> zkListeners = new ConcurrentHashMap<URL, ConcurrentMap<NotifyListener, ChildListener>>();
 
+    // zookeeper客户端
     private final ZookeeperClient zkClient;
 
     public ZookeeperRegistry(URL url, ZookeeperTransporter zookeeperTransporter) {
@@ -72,6 +75,7 @@ public class ZookeeperRegistry extends FailbackRegistry {
             public void stateChanged(int state) {
                 if (state == RECONNECTED) {
                     try {
+                        // 重连恢复注册状态
                         recover();
                     } catch (Exception e) {
                         logger.error(e.getMessage(), e);

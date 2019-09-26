@@ -51,9 +51,11 @@ public class DubboRegistry extends FailbackRegistry {
     private final ScheduledExecutorService reconnectTimer = Executors.newScheduledThreadPool(1, new NamedThreadFactory("DubboRegistryReconnectTimer", true));
 
     // Reconnection timer, regular check connection is available. If unavailable, unlimited reconnection.
+    // 重连定时器，定时校验连接是否可用，如果不可用，无限制重连
     private final ScheduledFuture<?> reconnectFuture;
 
     // The lock for client acquisition process, lock the creation process of the client instance to prevent repeated clients
+    // 客户端获取进程锁，锁定客户端实例的创建进程，以防止重复的客户端
     private final ReentrantLock clientLock = new ReentrantLock();
 
     private final Invoker<RegistryService> registryInvoker;
@@ -62,6 +64,7 @@ public class DubboRegistry extends FailbackRegistry {
 
     /**
      * The time in milliseconds the reconnectTimer will wait
+     * reconnectTimer等待重连时间（毫秒）
      */
     private final int reconnectPeriod;
 
@@ -87,15 +90,18 @@ public class DubboRegistry extends FailbackRegistry {
     protected final void connect() {
         try {
             // Check whether or not it is connected
+            // 检查是否可用
             if (isAvailable()) {
                 return;
             }
             if (logger.isInfoEnabled()) {
                 logger.info("Reconnect to registry " + getUrl());
             }
+            // 加锁，防止重复添加
             clientLock.lock();
             try {
                 // Double check whether or not it is connected
+                // 再次检查是否可用
                 if (isAvailable()) {
                     return;
                 }

@@ -56,41 +56,61 @@ import java.util.concurrent.atomic.AtomicReference;
 public abstract class AbstractRegistry implements Registry {
 
     // URL address separator, used in file cache, service provider URL separation
+    // URL地址分隔符，用于文件缓存中服务提供者URL分开
     private static final char URL_SEPARATOR = ' ';
     // URL address separated regular expression for parsing the service provider URL list in the file cache
+    // URL地址分隔正则表达式，用于解析文件缓存中服务提供者URL列表
     private static final String URL_SPLIT = "\\s+";
     // Log output
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     // Local disk cache, where the special key value.registies records the list of registry centers, and the others are the list of notified service providers
+    // 本地磁盘缓存
     private final Properties properties = new Properties();
     // File cache timing writing
+    // 文件缓存定时写
     private final ExecutorService registryCacheExecutor = Executors.newFixedThreadPool(1, new NamedThreadFactory("DubboSaveRegistryCache", true));
     // Is it synchronized to save the file
+    // 同步写文件
     private final boolean syncSaveFile;
+    // 最新版本号
     private final AtomicLong lastCacheChanged = new AtomicLong();
+    // 已注册 URL 集合
     private final Set<URL> registered = new ConcurrentHashSet<URL>();
+    // 订阅 URL 的监听器集合, key：消费者的 URL ，例如消费者的 URL
     private final ConcurrentMap<URL, Set<NotifyListener>> subscribed = new ConcurrentHashMap<URL, Set<NotifyListener>>();
+    // 被通知的 URL 集合
+    // key1：消费者的 URL ，例如消费者的 URL
+    // key2：分类，例如：providers、consumers、routes、configurators。【实际无 consumers ，因为消费者不会去订阅另外的消费者的列表】
     private final ConcurrentMap<URL, Map<String, List<URL>>> notified = new ConcurrentHashMap<URL, Map<String, List<URL>>>();
+    // 注册中心 URL
     private URL registryUrl;
     // Local disk cache file
+    // 本地磁盘缓存文件
     private File file;
 
     public AbstractRegistry(URL url) {
+        System.err.println("com.alibaba.dubbo.registry.support.AbstractRegistry.AbstractRegistry url => " + url.toFullString());
         setUrl(url);
         // Start file save timer
+        // 启动文件存储定时器
         syncSaveFile = url.getParameter(Constants.REGISTRY_FILESAVE_SYNC_KEY, false);
         String filename = url.getParameter(Constants.FILE_KEY, System.getProperty("user.home") + "/.dubbo/dubbo-registry-" + url.getParameter(Constants.APPLICATION_KEY) + "-" + url.getAddress() + ".cache");
+        System.err.println("com.alibaba.dubbo.registry.support.AbstractRegistry.AbstractRegistry filename【本地磁盘缓存文件】 => " + filename);
         File file = null;
         if (ConfigUtils.isNotEmpty(filename)) {
             file = new File(filename);
+            // 文件本地不存在 && 该文件的上级目录不为空 && 上级目录本地不存在
             if (!file.exists() && file.getParentFile() != null && !file.getParentFile().exists()) {
+                // 递归创建文件目录
                 if (!file.getParentFile().mkdirs()) {
                     throw new IllegalArgumentException("Invalid registry store file " + file + ", cause: Failed to create directory " + file.getParentFile() + "!");
                 }
             }
         }
         this.file = file;
+        // 加载本地磁盘缓存文件file到本地磁盘缓存properties
         loadProperties();
+        // TODO 通知，待细看
         notify(url.getBackupUrls());
     }
 
@@ -139,6 +159,7 @@ public abstract class AbstractRegistry implements Registry {
         return lastCacheChanged;
     }
 
+    // 将本地磁盘缓存文件file加载入本地磁盘缓存properties
     public void doSaveProperties(long version) {
         if (version < lastCacheChanged.get()) {
             return;
@@ -190,6 +211,7 @@ public abstract class AbstractRegistry implements Registry {
         }
     }
 
+    // 加载file对象，存储于本地缓存properties中
     private void loadProperties() {
         if (file != null && file.exists()) {
             InputStream in = null;
@@ -351,6 +373,7 @@ public abstract class AbstractRegistry implements Registry {
     protected void notify(List<URL> urls) {
         if (urls == null || urls.isEmpty()) return;
 
+        // 遍历 订阅URL的监听器集合
         for (Map.Entry<URL, Set<NotifyListener>> entry : getSubscribed().entrySet()) {
             URL url = entry.getKey();
 

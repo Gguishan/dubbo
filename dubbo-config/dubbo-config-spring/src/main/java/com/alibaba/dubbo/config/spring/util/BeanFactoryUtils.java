@@ -45,6 +45,7 @@ public abstract class BeanFactoryUtils {
     public static boolean addApplicationListener(ApplicationContext applicationContext, ApplicationListener listener) {
         try {
             // backward compatibility to spring 2.0.1
+            System.err.println("com.alibaba.dubbo.config.spring.util.BeanFactoryUtils.addApplicationListener applicationContext => " + applicationContext.getClass().getName());
             Method method = applicationContext.getClass().getMethod("addApplicationListener", ApplicationListener.class);
             method.invoke(applicationContext, listener);
             return true;

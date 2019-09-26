@@ -69,15 +69,18 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
     public ServiceBean() {
         super();
         this.service = null;
+        System.err.println("=========com.alibaba.dubbo.config.spring.ServiceBean()===========");
     }
 
     public ServiceBean(Service service) {
         super(service);
         this.service = service;
+        System.err.println("=========com.alibaba.dubbo.config.spring.ServiceBean(Service service)===========");
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
+        System.err.println("=========com.alibaba.dubbo.config.spring.ServiceBean.setApplicationContext===========");
         this.applicationContext = applicationContext;
         SpringExtensionFactory.addApplicationContext(applicationContext);
         supportedApplicationListener = addApplicationListener(applicationContext, this);
@@ -99,6 +102,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        System.err.println("=========com.alibaba.dubbo.config.spring.ServiceBean.onApplicationEvent===========");
         if (isDelay() && !isExported() && !isUnexported()) {
             if (logger.isInfoEnabled()) {
                 logger.info("The service ready on spring started. service: " + getInterface());
@@ -119,6 +123,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
     @Override
     @SuppressWarnings({"unchecked", "deprecation"})
     public void afterPropertiesSet() throws Exception {
+        System.err.println("=========com.alibaba.dubbo.config.spring.ServiceBean.afterPropertiesSet===========");
         if (getProvider() == null) {
             Map<String, ProviderConfig> providerConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ProviderConfig.class, false, false);
             if (providerConfigMap != null && providerConfigMap.size() > 0) {

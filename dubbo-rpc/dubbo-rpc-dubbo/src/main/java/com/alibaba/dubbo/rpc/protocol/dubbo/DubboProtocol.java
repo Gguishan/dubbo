@@ -229,7 +229,11 @@ public class DubboProtocol extends AbstractProtocol {
         URL url = invoker.getUrl();
 
         // export service.
+        // 暴露服务
+        // 通过url获得该服务的key。格式如：{serviceGroup}/{serviceName}: {serviceVersion}:{port}
         String key = serviceKey(url);
+        System.err.println("com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol.export key => " + key);
+        // Dubbo协议实现的服务发布器。
         DubboExporter<T> exporter = new DubboExporter<T>(invoker, key, exporterMap);
         exporterMap.put(key, exporter);
 
@@ -248,6 +252,7 @@ public class DubboProtocol extends AbstractProtocol {
             }
         }
 
+        // 调用打开服务器绑定url的方法
         openServer(url);
         optimizeSerialization(url);
         return exporter;
@@ -256,7 +261,9 @@ public class DubboProtocol extends AbstractProtocol {
     private void openServer(URL url) {
         // find server.
         String key = url.getAddress();
+        System.err.println("com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol.openServer key => " + key);
         //client can export a service which's only for server to invoke
+        // client 可以暴露一个仅用于服务器调用的服务
         boolean isServer = url.getParameter(Constants.IS_SERVER_KEY, true);
         if (isServer) {
             ExchangeServer server = serverMap.get(key);
@@ -271,11 +278,13 @@ public class DubboProtocol extends AbstractProtocol {
 
     private ExchangeServer createServer(URL url) {
         // send readonly event when server closes, it's enabled by default
+        // 默认开启server关闭时，发送readonly事件
         url = url.addParameterIfAbsent(Constants.CHANNEL_READONLYEVENT_SENT_KEY, Boolean.TRUE.toString());
         // enable heartbeat by default
+        // 默认开启心跳机制
         url = url.addParameterIfAbsent(Constants.HEARTBEAT_KEY, String.valueOf(Constants.DEFAULT_HEARTBEAT));
         String str = url.getParameter(Constants.SERVER_KEY, Constants.DEFAULT_REMOTING_SERVER);
-
+        System.err.println("com.alibaba.dubbo.rpc.protocol.dubbo.DubboProtocol.createServer str => " + str);
         if (str != null && str.length() > 0 && !ExtensionLoader.getExtensionLoader(Transporter.class).hasExtension(str))
             throw new RpcException("Unsupported server type: " + str + ", url: " + url);
 
