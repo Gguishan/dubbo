@@ -50,8 +50,10 @@ public abstract class AbstractInvoker<T> implements Invoker<T> {
 
     private final Map<String, String> attachment;
 
+    // 是否可用，默认true
     private volatile boolean available = true;
 
+    // invoker是否销毁
     private AtomicBoolean destroyed = new AtomicBoolean(false);
 
     public AbstractInvoker(Class<T> type, URL url) {
