@@ -62,6 +62,9 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
 
     private transient String beanName;
 
+    /**
+     * 当前的 Spring 容器是否支持 ApplicationListener
+     */
     private transient boolean supportedApplicationListener;
 
     private ApplicationEventPublisher applicationEventPublisher;
@@ -83,6 +86,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         System.err.println("=========com.alibaba.dubbo.config.spring.ServiceBean.setApplicationContext===========");
         this.applicationContext = applicationContext;
         SpringExtensionFactory.addApplicationContext(applicationContext);
+        // 想spring容器添加ApplicationListener 根据结果判断当前的 Spring 容器是否支持 ApplicationListener
         supportedApplicationListener = addApplicationListener(applicationContext, this);
     }
 
@@ -103,6 +107,7 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         System.err.println("=========com.alibaba.dubbo.config.spring.ServiceBean.onApplicationEvent===========");
+        // 是否有延迟导出 && 是否已导出 && 是不是已被取消导出
         if (isDelay() && !isExported() && !isUnexported()) {
             if (logger.isInfoEnabled()) {
                 logger.info("The service ready on spring started. service: " + getInterface());
@@ -111,12 +116,20 @@ public class ServiceBean<T> extends ServiceConfig<T> implements InitializingBean
         }
     }
 
+    /**
+     * 是否有延迟导出
+     * 当方法返回 true 时，表示无需延迟导出。返回 false 时，表示需要延迟导出
+     * @return
+     */
     private boolean isDelay() {
+        // 获取 delay
         Integer delay = getDelay();
         ProviderConfig provider = getProvider();
         if (delay == null && provider != null) {
+            // 如果前面获取的 delay 为空，这里继续获取
             delay = provider.getDelay();
         }
+        // 判断当前的 Spring 容器是否支持 ApplicationListener && delay 是否为空，或者等于 -1
         return supportedApplicationListener && (delay == null || delay == -1);
     }
 

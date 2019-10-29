@@ -32,48 +32,53 @@ public abstract class AbstractServiceConfig extends AbstractInterfaceConfig {
 
     private static final long serialVersionUID = 1L;
 
-    // version
+    // version 版本
     protected String version;
 
-    // group
+    // group 组
     protected String group;
 
-    // whether the service is deprecated
+    // whether the service is deprecated 服务是否过时
     protected Boolean deprecated;
 
-    // delay service exporting
+    // delay service exporting 延迟服务导出
     protected Integer delay;
 
-    // whether to export the service
+    // whether to export the service 是否导出服务
     protected Boolean export;
 
-    // weight
+    // weight 权重
     protected Integer weight;
 
-    // document center
+    // document center 文档中心
     protected String document;
 
     // whether to register as a dynamic service or not on register center
+    // 是否作为动态服务或在注册中心进行注册
     protected Boolean dynamic;
 
     // whether to use token
+    // 是否使用token
     protected String token;
 
-    // access log
+    // access log 日志
     protected String accesslog;
     protected List<ProtocolConfig> protocols;
     // max allowed execute times
+    // 最大允许执行周期
     private Integer executes;
     // whether to register
+    // 是否注册
     private Boolean register;
 
     // warm up period
+    // 预热时间
     private Integer warmup;
 
-    // serialization
+    // serialization 序列化
     private String serialization;
 
-    // provider tag
+    // provider tag 提供者标志
     protected String tag;
 
     public String getVersion() {

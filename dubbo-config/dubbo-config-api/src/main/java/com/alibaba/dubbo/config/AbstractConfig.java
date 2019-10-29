@@ -89,22 +89,28 @@ public abstract class AbstractConfig implements Serializable {
         return value;
     }
 
+    /**
+     * 获取配置参数并设值
+     * @param config
+     */
     protected static void appendProperties(AbstractConfig config) {
-//        System.err.println("=========com.alibaba.dubbo.config.AbstractInterfaceConfig.appendProperties===1=====");
         if (config == null) {
             return;
         }
         String prefix = "dubbo." + getTagName(config.getClass()) + ".";
+        logger.debug("appendProperties = prefix => " + prefix);
         Method[] methods = config.getClass().getMethods();
         for (Method method : methods) {
             try {
                 String name = method.getName();
-                // set方法，public，一个参数，参数是基本类型
+                // 1. name长度大于3
+                // 2. set方法
+                // 3. public
+                // 4. 一个参数
+                // 5. 参数是基本类型
                 if (name.length() > 3 && name.startsWith("set") && Modifier.isPublic(method.getModifiers())
                         && method.getParameterTypes().length == 1 && isPrimitive(method.getParameterTypes()[0])) {
-//                    System.err.println("com.alibaba.dubbo.config.AbstractConfig.appendProperties method => " + name);
                     String property = StringUtils.camelToSplitName(name.substring(3, 4).toLowerCase() + name.substring(4), ".");
-//                    System.err.println("com.alibaba.dubbo.config.AbstractConfig.appendProperties property => " + property);
                     String value = null;
                     if (config.getId() != null && config.getId().length() > 0) {
                         String pn = prefix + config.getId() + "." + property;
@@ -149,8 +155,6 @@ public abstract class AbstractConfig implements Serializable {
                             }
                         }
                     }
-//                    System.err.println("com.alibaba.dubbo.config.AbstractConfig.appendProperties value => " + value);
-//                    System.out.println("==============================================================");
                     if (value != null && value.length() > 0) {
                         method.invoke(config, convertPrimitive(method.getParameterTypes()[0], value));
                     }
@@ -159,7 +163,6 @@ public abstract class AbstractConfig implements Serializable {
                 logger.error(e.getMessage(), e);
             }
         }
-//        System.err.println("=========com.alibaba.dubbo.config.AbstractInterfaceConfig.appendProperties===2=====");
     }
 
     private static String getTagName(Class<?> cls) {

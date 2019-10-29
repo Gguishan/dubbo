@@ -51,8 +51,10 @@ public class Transporters {
         if (handlers.length == 1) {
             handler = handlers[0];
         } else {
+            // 如果 handlers 元素数量大于1，则创建 ChannelHandler 分发器
             handler = new ChannelHandlerDispatcher(handlers);
         }
+        // 获取自适应 Transporter 实例，并调用实例方法
         return getTransporter().bind(url, handler);
     }
 
@@ -75,6 +77,11 @@ public class Transporters {
         return getTransporter().connect(url, handler);
     }
 
+    /**
+     * 动态自适应扩展，TransporterAdaptive 会在运行时根据传入的URL参数决定加载什么类型的 Transporter，
+     * 默认为 NettyTransporter
+     * @return
+     */
     public static Transporter getTransporter() {
         return ExtensionLoader.getExtensionLoader(Transporter.class).getAdaptiveExtension();
     }
