@@ -833,6 +833,7 @@ public class ExtensionLoader<T> {
     private Class<?> createAdaptiveExtensionClass() {
         // 构建自适应拓展代码
         String code = createAdaptiveExtensionClassCode();
+        System.err.println("com.alibaba.dubbo.common.extension.ExtensionLoader.createAdaptiveExtensionClass -> code => " + code);
         ClassLoader classLoader = findClassLoader();
         // 获取编译器实现类
         com.alibaba.dubbo.common.compiler.Compiler compiler = ExtensionLoader.getExtensionLoader(com.alibaba.dubbo.common.compiler.Compiler.class).getAdaptiveExtension();

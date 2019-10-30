@@ -109,11 +109,13 @@ public class Exchangers {
             throw new IllegalArgumentException("handler == null");
         }
         url = url.addParameterIfAbsent(Constants.CODEC_KEY, "exchange");
+        // 获取 Exchanger 实例，默认为 HeaderExchangeClient
         return getExchanger(url).connect(url, handler);
     }
 
     public static Exchanger getExchanger(URL url) {
         String type = url.getParameter(Constants.EXCHANGER_KEY, Constants.DEFAULT_EXCHANGER);
+        // getExchanger 会通过 SPI 加载 HeaderExchangeClient 实例
         return getExchanger(type);
     }
 

@@ -223,7 +223,6 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
 
     protected synchronized void doExport() {
-        System.err.println("=============com.alibaba.dubbo.config.ServiceConfig.doExport==================");
         if (unexported) {
             throw new IllegalStateException("Already unexported!");
         }
@@ -808,6 +807,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         if (provider == null) {
             provider = new ProviderConfig();
         }
+        // 初始化系统属性
         appendProperties(provider);
     }
 

@@ -106,9 +106,8 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
 
     protected void checkRegistry() {
         // for backward compatibility
-        // 注册中心配置信息为空
+        // 注册中心配置信息为空，根据配置文件获取地址，并创建
         if (registries == null || registries.isEmpty()) {
-            // 根据配置文件获取地址
             String address = ConfigUtils.getProperty("dubbo.registry.address");
             if (address != null && address.length() > 0) {
                 registries = new ArrayList<RegistryConfig>();
@@ -147,6 +146,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
             throw new IllegalStateException(
                     "No such application config! Please add <dubbo:application name=\"...\" /> to your spring config.");
         }
+        // 设置属性值
         appendProperties(application);
 
         String wait = ConfigUtils.getProperty(Constants.SHUTDOWN_WAIT_KEY);
@@ -161,11 +161,11 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
     }
 
     /**
-     * 加载注册中心链接
+     * 加载注册中心URL
      * 1.检测是否存在注册中心配置类，不存在则抛出异常
      * 2.构建参数映射集合，也就是 map
-     * 3.构建注册中心链接列表
-     * 4.遍历链接列表，并根据条件决定是否将其添加到 registryList 中
+     * 3.构建注册中心URL列表
+     * 4.遍历URL列表，并根据条件决定是否将其添加到 registryList 中
      * @param provider
      * @return
      */

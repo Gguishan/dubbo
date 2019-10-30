@@ -64,6 +64,7 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements FactoryBean,
 
     @Override
     public Object getObject() throws Exception {
+        System.err.println("=========com.alibaba.dubbo.config.spring.ReferenceBean.getObject=============");
         return get();
     }
 
@@ -81,6 +82,7 @@ public class ReferenceBean<T> extends ReferenceConfig<T> implements FactoryBean,
     @Override
     @SuppressWarnings({"unchecked"})
     public void afterPropertiesSet() throws Exception {
+        System.err.println("=========com.alibaba.dubbo.config.spring.ReferenceBean.afterPropertiesSet=============");
         if (getConsumer() == null) {
             Map<String, ConsumerConfig> consumerConfigMap = applicationContext == null ? null : BeanFactoryUtils.beansOfTypeIncludingAncestors(applicationContext, ConsumerConfig.class, false, false);
             if (consumerConfigMap != null && consumerConfigMap.size() > 0) {

@@ -91,6 +91,11 @@ public class InjvmProtocol extends AbstractProtocol implements Protocol {
         return new InjvmInvoker<T>(serviceType, url, url.getServiceKey(), exporterMap);
     }
 
+    /**
+     * 检测是否需要本地引用
+     * @param url
+     * @return
+     */
     public boolean isInjvmRefer(URL url) {
         final boolean isJvmRefer;
         String scope = url.getParameter(Constants.SCOPE_KEY);
