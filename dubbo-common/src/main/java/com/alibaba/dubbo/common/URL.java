@@ -1224,7 +1224,6 @@ public final class URL implements Serializable {
         if (version != null && version.length() > 0) {
             buf.append(":").append(version);
         }
-        System.err.println("getServiceKey => " + buf.toString());
         return buf.toString();
     }
 
